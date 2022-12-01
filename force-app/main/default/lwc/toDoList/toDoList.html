@@ -1,0 +1,54 @@
+<!--
+  @description       : LWC to display To Do records created by the current user
+  @author            : Adam Dirks
+  @last modified on  : 12-01-2022
+  @last modified by  : Adam Dirks
+-->
+<template>
+    <lightning-card title="Your To-Do List">
+        <template if:true={error}>
+            {error}
+        </template>
+        
+        <!-- Lightning card buttons -->
+        <div slot="actions">
+            <lightning-button title="New" label="New" onclick={openModal}></lightning-button>
+            <lightning-button-icon icon-name="utility:refresh" onclick={handleRefresh}></lightning-button-icon>
+        </div>
+
+        <!-- Data table -->
+        <div>
+            <lightning-datatable hide-checkbox-column="true"
+                key-field="Id"
+                data={toDoList}
+                columns={toDoColumns}
+                onrowaction={handleRowAction}>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+
+    <!-- Modal -->
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="modalSection slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!--Modal Header -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <lightning-icon variant="inverse" onclick={closeModal} alternative-text="close" icon-name="utility:close" size="small"></lightning-icon>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">New To Do</h2>
+                </header>
+                <!--Modal Body -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning-record-form
+                        object-api-name="To_Do__c"
+                        fields={fields}
+                        onsuccess={handleSuccess}
+                        oncancel={closeModal}>
+                    </lightning-record-form>
+                </div>
+            </div>
+        </section>
+        <div class="backdropDiv slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
